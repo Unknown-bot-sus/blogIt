@@ -8,6 +8,7 @@
     "build-db": "cat db_schema.sql | sqlite3 database.db #build anew database from the sql file",
     "clean-db": "rm database.db #remove the old database",
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "build-style": "npx tailwindcss -i ./public/style.css -o ./dist/output.css --watch"
   },
   "author": "Thar Lin Shwe",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
     "tailwindcss": "^3.3.2"
   }
 }
