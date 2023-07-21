@@ -7,6 +7,8 @@ const { PORT } = require("./config/constant");
 const path = require("path");
 const userRoutes = require("./routes/user");
 const authorRoutes = require("./routes/authors");
+const articleRoutes = require("./routes/articles");
+
 const { errorHandler } = require("./middleware/error-handler");
 
 const app = express();
@@ -17,9 +19,12 @@ app.use(expressLayouts);
 // expose the css file from dist folder
 app.use(express.static(path.join(__dirname, "dist")));
 
+app.use(express.json());
+
 // configure routes
 app.use("/user", userRoutes); //this adds all the userRoutes to the app under the path /user
 app.use("/authors", authorRoutes);
+app.use("/articles", articleRoutes);
 
 // added errorHandler middleware
 app.use(errorHandler);
