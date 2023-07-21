@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
+    <!-- css from tailwind -->
+    <link href="/output.css" rel="stylesheet" />
   </head>
-  <body></body>
+  <body>
+    <%- include("../partials/nav.ejs") %> <%- body %>
+    <!-- Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
 </html>
