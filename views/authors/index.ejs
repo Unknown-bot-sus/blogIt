@@ -1,0 +1,41 @@
+<main>
+  <h1>Author home page</h1>
+  <div>
+    <span> <%= user.name %> </span>
+    <span> Title: <%= user.title %> </span>
+    <span> Subtitle: <%= user.subtitle %> </span>
+  </div>
+  <div>
+    <span>Articles</span>
+    <div>
+      <% for (let article of articles) { %> <%-
+      include("../partials/article.ejs", article) %> <% } %>
+    </div>
+  </div>
+  <div>
+    <span>Published Articles</span>
+    <div>
+      <% for (let article of publishedArticles) { %> <%-
+      include("../partials/article.ejs", article) %> <% } %>
+    </div>
+  </div>
+  <a href="settings">Settings</a>
+  <a href="articles/create" id="createDraft">Create new draft</a>
+  <script>
+    const createBtn = document.getElementById("createDraft");
+    createBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const { data: article } = await axios.post("/articles/", {
+        article: {
+          title: "draft",
+          subtitle: "lorem ipsum",
+          content: "lorem ipsum",
+        },
+        user: {
+          id: 1,
+        },
+      });
+      window.location.href = `articles/${article.id}/create`;
+    });
+  </script>
+</main>
