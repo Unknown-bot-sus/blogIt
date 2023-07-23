@@ -1,0 +1,49 @@
+<main>
+  <h1>Author Edit Page</h1>
+  <form id="form">
+    <span>Created at: <%= article.created_at %></span>
+    <span>Updated at: <%= article.udpated_at %></span>
+    <div>
+      <label for="title">Title</label>
+      <input id="title" type="text" name="title" value="<%= article.title %>" />
+    </div>
+    <div>
+      <label for="subtitle">Subtitle</label>
+      <input
+        id="subtitle"
+        type="text"
+        name="subtitle"
+        value="<%= article.subtitle %>"
+      />
+    </div>
+    <div>
+      <label for="content">content</label>
+      <input
+        id="content"
+        type="text"
+        name="content"
+        value="<%= article.content %>"
+      />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <a href="/authors/<%= article.authorId%>">Author Home Page</a>
+
+  <script>
+    const form = document.getElementById("form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      let formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+
+      for (let field in data) {
+        if (field === "") {
+        }
+      }
+      const paths = location.pathname.split("/");
+      const id = paths[paths.length - 2];
+      await axios.put(`/articles/${id}`, data);
+    });
+  </script>
+</main>
