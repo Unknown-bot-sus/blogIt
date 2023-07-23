@@ -1,0 +1,35 @@
+<main>
+  <h1>Settings</h1>
+  <form id="form">
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" value="<%= user.name %>" />
+    </div>
+    <div>
+      <label for="title">title</label>
+      <input type="text" id="title" name="title" value="<%= user.title %>" />
+    </div>
+    <div>
+      <label for="subtitle">subtitle</label>
+      <input
+        type="text"
+        id="subtitle"
+        name="subtitle"
+        value="<%= user.subtitle %>"
+      />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <a href="/authors/<%= user.id %>">Back to Author home page</a>
+</main>
+<script>
+  const form = document.getElementById("form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const paths = location.pathname.split("/");
+    const id = paths[paths.length - 2];
+    const data = new FormData(e.target);
+    await axios.put(`/authors/${id}`, Object.fromEntries(data));
+    location.href = `/authors/${id}`;
+  });
+</script>
