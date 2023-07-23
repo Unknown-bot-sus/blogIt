@@ -1,5 +1,33 @@
 <div>
-  <span> <%= title %> </span>
-  <span> <%= subtitle %> </span>
-  <span> <%= content %> </span>
+  <span><%= title %> </span>
+  <span><%= subtitle %> </span>
+  <span><%= content %></span>
+  <span><%= created_at %></span>
+  <span><%= updated_at %></span>
+
+  <% if (publication_date !== null) { %>
+  <a href="/articles/<%=id%>">Read More</a>
+  <%} else { %>
+  <button
+    type="button"
+    onclick='(async ()=> {
+    await axios.put("/articles/<%= id%>", {
+      publish: true
+    });
+    location.reload()
+  })()'
+  >
+    Publish
+  </button>
+  <a href="/articles/<%=id%>/edit">Edit</a>
+  <% } %>
+  <button
+    type="button"
+    onclick='(async () => {
+    await axios.delete("/articles/<%=id%>");
+    location.reload();
+  })()'
+  >
+    Delete
+  </button>
 </div>
