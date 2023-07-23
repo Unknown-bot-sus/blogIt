@@ -6,7 +6,12 @@ function homePage(req, res) {
     [req.params.id],
     (err, user) => {
       db.all(
-        "SELECT * FROM Articles WHERE authorId = ?",
+        `
+        SELECT Articles.*, Likes.likes FROM
+        (SELECT * FROM Articles WHERE authorId = ?) AS Articles INNER JOIN 
+        (SELECT COUNT(id) as likes, articleId FROM Likes GROUP BY articleId) AS Likes ON
+        Articles.id = Likes.articleId
+        `,
         [req.params.id],
         (err, articles) => {
           const { publishedArticles, unpublishedArticles } = articles.reduce(
