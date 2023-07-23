@@ -117,5 +117,7 @@ INSERT INTO Articles (
     1
 );
 
+INSERT INTO Likes ("articleId", "userId") VALUES (1, 1), (1, 2), (2, 1), (2, 2);
+
 COMMIT;
 
