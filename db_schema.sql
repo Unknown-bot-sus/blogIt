@@ -21,9 +21,15 @@ CREATE TABLE IF NOT EXISTS testUserRecords (
 CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    password TEXT NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Authors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    subtitle TEXT NOT NULL
+    subtitle TEXT NOT NULL,
+    userId INT NOT NULL,
+    FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 CREATE TABLE IF NOT EXISTS Articles (
@@ -33,7 +39,9 @@ CREATE TABLE IF NOT EXISTS Articles (
     content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    publication_date DATETIME DEFAULT NULL
+    publication_date DATETIME DEFAULT NULL,
+    authorId INT NOT NULL,
+    FOREIGN KEY(authorId) REFERENCES Authors(id)
 );
 
 CREATE TRIGGER UpdateedAtArticles
@@ -41,15 +49,6 @@ AFTER UPDATE On Articles
 BEGIN
    UPDATE Articles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
-
-
-CREATE TABLE IF NOT EXISTS Contributors (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    authorId INT NOT NULL,
-    articleId INT NOT NULL,
-    FOREIGN KEY(authorId) REFERENCES Users(id),
-    FOREIGN KEY(articleId) REFERENCES Articles(id)
-);
 
 CREATE TABLE IF NOT EXISTS Likes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,42 +87,35 @@ CREATE TABLE IF NOT EXISTS Replies (
 
 --insert default data (if necessary here)
 
-INSERT INTO testUsers ("test_name") VALUES ("Simon Star");
-INSERT INTO testUserRecords ("test_record_value", "test_user_id") VALUES( "Lorem ipsum dolor sit amet", 1); --try changing the test_user_id to a different number and you will get an error
+INSERT INTO Users ("name", "password") VALUES ("Thar Lin", "password123"),("Bacus", "password123");
 
-INSERT INTO Users ("name", "password", "title", "subtitle") VALUES ("Thar Lin", "password123", "Lorem Ipsum", "subtitle");
-INSERT INTO Users ("name", "password", "title", "subtitle") VALUES ("Bacus", "password123", "Lorem Ipsum", "subtitle");
+INSERT INTO Authors ("title", "subtitle", "userId") VALUES ("Lorem ipsum", "subtitle", 1);
 
 INSERT INTO Articles (
     "title",
     "subtitle",
-    "content"
+    "content",
+    "authorId"
 ) VALUES (
     "Hello world",
     "Sub  title",
-    "Content"
+    "Content",
+    1
 );
 
 INSERT INTO Articles (
     "title",
     "subtitle",
     "content",
-    "publication_date"
+    "publication_date",
+    "authorId"
 ) VALUES (
     "Hello world 2",
     "Sub  title",
     "Content",
-    "2023-07-20 08:50:16"
+    CURRENT_TIMESTAMP,
+    1
 );
 
-INSERT INTO Contributors(
-    "authorId",
-    "articleId"
-) VALUES (1, 1);
-
-INSERT INTO Contributors(
-    "authorId",
-    "articleId"
-) VALUES (1, 2);
 COMMIT;
 
