@@ -19,10 +19,14 @@
       include("../partials/article.ejs", article) %> <% } %>
     </div>
   </div>
-  <a href="settings">Settings</a>
+  <a id="settings">Settings</a>
   <a href="articles/create" id="createDraft">Create new draft</a>
   <script>
+    const paths = location.pathname.split("/").filter((path) => path !== "");
+    const id = parseInt(paths[paths.length - 1]);
     const createBtn = document.getElementById("createDraft");
+    const settingsLink = document.getElementById("settings");
+    settingsLink.setAttribute("href", `/authors/${id}/settings`);
     createBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       const { data: article } = await axios.post("/articles/", {
@@ -31,11 +35,11 @@
           subtitle: "lorem ipsum",
           content: "lorem ipsum",
         },
-        user: {
-          id: 1,
+        author: {
+          id,
         },
       });
-      window.location.href = `articles/${article.id}/create`;
+      window.location.href = `/articles/${article.id}/edit`;
     });
   </script>
 </main>
