@@ -68,21 +68,6 @@ CREATE TABLE IF NOT EXISTS Comments (
     FOREIGN KEY(articleId) REFERENCES Articles(id)
 );
 
-CREATE TABLE IF NOT EXISTS CommentLikes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userId INT NOT NULL,
-    commentId INT NOT NULL,
-    FOREIGN KEY(userId) REFERENCES Users(id),
-    FOREIGN KEY(commentId) REFERENCES Comments(id)
-);
-
-CREATE TABLE IF NOT EXISTS Replies (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    commentId INT NOT NULL,
-    replyId INT NOT NULL,
-    FOREIGN KEY(commentId) REFERENCES Comments(id)
-    FOREIGN KEY(replyId) REFERENCES Comments(id)
-);
 
 
 
@@ -127,8 +112,6 @@ INSERT INTO Comments (
     1,
     "Text Comment"
 ), (1, 2, "Text Comment");
-
-INSERT INTO CommentLikes ("userId", "commentId") VALUES (1, 1);
 
 INSERT INTO Likes ("articleId", "userId") VALUES (1, 1), (1, 2), (2, 1), (2, 2);
 
