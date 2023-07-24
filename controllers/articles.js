@@ -11,6 +11,7 @@ function deleteArticle(req, res) {
     }
   );
 }
+
 function createArticle(req, res) {
   const { article, author } = req.body;
   db.get(
@@ -90,10 +91,22 @@ Comments.id = Likes.commentId ORDER BY Comments.created_at DESC`,
   );
 }
 
+function like(req, res) {
+  const data = req.body;
+  db.run(
+    "INSERT INTO Likes (articleId, userId) VALUES (?, ?)",
+    [data.articleId, data.userId],
+    (err) => {
+      res.status(StatusCodes.NO_CONTENT).send();
+    }
+  );
+}
+
 module.exports = {
   createArticle,
   editArtcile,
   editPage,
   detailPage,
   deleteArticle,
+  like,
 };
