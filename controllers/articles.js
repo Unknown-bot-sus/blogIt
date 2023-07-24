@@ -56,9 +56,44 @@ function editPage(req, res) {
   );
 }
 
+function detailPage(req, res) {
+  db.get(
+    `
+SELECT Articles.*, IFNULL(Likes.likes, 0) AS likes FROM
+(SELECT * FROM Articles WHERE id = $id) AS Articles LEFT JOIN 
+(SELECT COUNT(id) as likes, articleId FROM Likes WHERE articleId = $id GROUP BY articleId) AS Likes ON
+Articles.id = Likes.articleId
+;  
+`,
+    {
+      $id: req.params.id,
+    },
+    (err, article) => {
+      db.all(
+        `
+SELECT Comments.*, IFNULL(Likes.likes, 0) AS likes FROM
+(SELECT * FROM Comments WHERE articleId = $articleId) AS Comments LEFT JOIN 
+(SELECT COUNT(id) as likes, commentId FROM CommentLikes GROUP BY commentId) AS Likes ON
+Comments.id = Likes.commentId ORDER BY Comments.created_at DESC`,
+        {
+          $articleId: req.params.id,
+        },
+        (err, comments) => {
+          res.render("articles/detail", {
+            title: "Article",
+            article,
+            comments,
+          });
+        }
+      );
+    }
+  );
+}
+
 module.exports = {
   createArticle,
   editArtcile,
   editPage,
+  detailPage,
   deleteArticle,
 };
