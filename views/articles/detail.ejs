@@ -1,0 +1,43 @@
+<main>
+  <div>
+    <span>Title</span>
+    <span><%= article.title %></span>
+  </div>
+  <div>
+    <span>Subtitle</span>
+    <span><%= article.subtitle %></span>
+  </div>
+  <div>
+    <span>Publication date</span>
+    <span><%= article.publication_date %></span>
+  </div>
+  <div>
+    <span>Content</span>
+    <span><%= article.content %></span>
+  </div>
+  <div>
+    <span>Number of Likes </span>
+    <span><%= article.likes %></span>
+  </div>
+  <button>Like</button>
+  <a href="/">Reader Home page</a>
+  <form id="commentForm"">
+    <label for="comment">Comment</label>
+    <textarea id="comment" name="comment" name="comment" cols="30" rows="10"></textarea>
+    <button type="submit">Submit</button>
+  </form>
+    <div>
+      <% for (let comment of comments) { %> <%-
+      include("../partials/comment.ejs", comment) %> <% } %>
+    </div>
+    <script>
+      const commentForm = document.getElementById("commentForm");
+      commentForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        await axios.post("/comments", data)
+      })
+    </script>
+</main>
