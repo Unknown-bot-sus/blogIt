@@ -19,7 +19,7 @@
     <span>Number of Likes </span>
     <span><%= article.likes %></span>
   </div>
-  <button>Like</button>
+  <button id="likeBtn" type="button">Like</button>
   <a href="/">Reader Home page</a>
   <form id="commentForm"">
     <label for="comment">Comment</label>
@@ -32,12 +32,29 @@
     </div>
     <script>
       const commentForm = document.getElementById("commentForm");
+      const likeBtn = document.getElementById("likeBtn");
+      const paths = location.pathname.split("/");
+      const articleId = paths[paths.length - 1];
       commentForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
 
-        await axios.post("/comments", data)
+        await axios.post("/comments", {
+          ...data,
+          articleId
+        });
+
+        location.reload();
+      });
+
+      likeBtn.addEventListener("click", async(e) => {
+        console.log("hello");
+        await axios.post(`/articles/${articleId}/likes`, {
+          articleId,
+          userId: 1
+        })
+        location.reload();
       })
     </script>
 </main>
