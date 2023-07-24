@@ -1,34 +1,44 @@
-<div>
-  <span><%= title %> </span>
-  <span><%= subtitle %> </span>
-  <span><%= content %></span>
-  <span><%= created_at %></span>
-  <span><%= updated_at %></span>
-  <span>Num of Likes <%= likes %></span>
-
+<div class="w-80 rounded-lg py-3 px-5 mx-3 bg-gray-100">
+  <span class="block text-lg font-bold"><%= title %> </span>
+  <span class="block text-sm text-gray-600"><%= subtitle %> </span>
+  <span class="text-sm block text-gray-400"
+    ><%= new Date(created_at).toDateString() %></span
+  >
   <% if (publication_date !== null) { %>
-  <a href="/articles/<%=id%>">Read More</a>
-  <%} else { %>
-  <button
-    type="button"
-    onclick='(async ()=> {
-    await axios.put("/articles/<%= id%>", {
-      publish: true
-    });
-    location.reload()
-  })()'
+    <span class="text-sm block text-gray-600"
+    >Published: <%= new Date(publication_date).toDateString() %></span
   >
-    Publish
-  </button>
-  <a href="/articles/<%=id%>/edit">Edit</a>
   <% } %>
-  <button
-    type="button"
-    onclick='(async () => {
-    await axios.delete("/articles/<%=id%>");
-    location.reload();
-  })()'
-  >
-    Delete
-  </button>
+  <span class="text-sm block">Updated: <%= timeSince(convertToISO(updated_at)) %></span>
+  <span>Likes: <%= likes %></span>
+
+  <div>
+    <% if (publication_date !== null) { %>
+      <a href="/articles/<%=id%>" class="text-blue-500">Read More</a>
+      <%} else { %>
+    <button
+      type="button"
+      onclick='(async ()=> {
+        await axios.put("/articles/<%= id%>", {
+          publish: true
+        });
+        location.reload()
+      })()'
+      class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded mr-2"
+    >
+      Publish
+    </button>
+    <a href="/articles/<%=id%>/edit" class="text-blue-500 mr-2">Edit</a>
+    <% } %>
+    <button
+      type="button"
+      onclick='(async () => {
+        await axios.delete("/articles/<%=id%>");
+        location.reload();
+      })()'
+      class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+    >
+      Delete
+    </button>
+  </div>
 </div>

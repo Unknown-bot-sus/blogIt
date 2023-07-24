@@ -1,3 +1,6 @@
+const timeSince = require("../utils/timeSince");
+const convertToISO = require('../utils/convertToIso')
+
 function homePage(req, res) {
   db.all("SELECT * FROM Authors", (err, authors) => {
     db.all(
@@ -12,6 +15,8 @@ function homePage(req, res) {
           title: "Reader Page",
           authors,
           articles,
+          timeSince,
+          convertToISO
         });
       }
     );

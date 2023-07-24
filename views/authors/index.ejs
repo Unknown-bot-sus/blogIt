@@ -1,26 +1,30 @@
-<main>
-  <h1>Author home page</h1>
-  <div>
-    <span> <%= user.name %> </span>
-    <span> Title: <%= user.title %> </span>
-    <span> Subtitle: <%= user.subtitle %> </span>
+<main class="p-5">
+  <div class="flex justify-between">
+    <h1 class="text-2xl font-bold">Author home page</h1>
+    <a id="settings" class="bg-gray-700 text-white rounded-lg p-2">Settings</a>
   </div>
+
+  <div class="flex flex-col mt-4">
+    <span class="text-2xl"> <%= user.title %> </span>
+    <span class="text-xl text-gray-500 italic"> <%= user.subtitle %> </span>
+    <span class="mt-2"> Author: <%= user.name %> </span>
+  </div>
+  <hr class="border border-black my-4" />
   <div>
-    <span>Articles</span>
-    <div>
+    <span class="text-xl font-bold inline-block mb-2">Articles</span>
+    <div class="flex flex-wrap -mx-4">
       <% for (let article of articles) { %> <%-
-      include("../partials/article.ejs", article) %> <% } %>
+      include("../partials/article.ejs", {...article, timeSince, convertToISO}) %> <% } %>
     </div>
   </div>
   <div>
-    <span>Published Articles</span>
-    <div>
+    <span class="text-xl font-bold inline-block my-2">Published Articles</span>
+    <div class="flex flex-wrap -mx-4">
       <% for (let article of publishedArticles) { %> <%-
-      include("../partials/article.ejs", article) %> <% } %>
+      include("../partials/article.ejs", {...article, timeSince, convertToISO}) %> <% } %>
     </div>
   </div>
-  <a id="settings">Settings</a>
-  <a href="articles/create" id="createDraft">Create new draft</a>
+  <a href="articles/create" id="createDraft" class="block mt-4 text-blue-500">Create new draft</a>
   <script>
     const paths = location.pathname.split("/").filter((path) => path !== "");
     const id = parseInt(paths[paths.length - 1]);

@@ -1,15 +1,16 @@
 const { StatusCodes } = require("http-status-codes");
+const convertToISO = require('../utils/convertToIso');
+const timeSince = require('../utils/timeSince');
 
 function deleteArticle(req, res) {
-  db.run(
-    "DELETE FROM Contributors WHERE articleId = ?",
-    [req.params.id],
-    (err) => {
+  db.run("DELETE FROM Comments WHERE articleId = ?", [req.params.id], (err) => {
+    db.run("DELETE FROM Likes WHERE articleId = ?", [req.params.id], (err) => {
       db.run("DELETE FROM Articles WHERE id = ?", [req.params.id], (err) => {
+        console.log(err);
         res.status(StatusCodes.NO_CONTENT).send();
       });
-    }
-  );
+    });
+  });
 }
 
 function createArticle(req, res) {
@@ -52,6 +53,8 @@ function editPage(req, res) {
       res.render("articles/edit", {
         title: "Edit article",
         article,
+        convertToISO,
+        timeSince,
       });
     }
   );
@@ -72,14 +75,12 @@ Articles.id = Likes.articleId
     (err, article) => {
       db.all(
         `
-SELECT Comments.*, IFNULL(Likes.likes, 0) AS likes FROM
-(SELECT * FROM Comments WHERE articleId = $articleId) AS Comments LEFT JOIN 
-(SELECT COUNT(id) as likes, commentId FROM CommentLikes GROUP BY commentId) AS Likes ON
-Comments.id = Likes.commentId ORDER BY Comments.created_at DESC`,
+SELECT * FROM Comments LEFT JOIN Users ON Comments.userId = Users.id WHERE Comments.articleId = $articleId ORDER BY Comments.created_at DESC`,
         {
           $articleId: req.params.id,
         },
         (err, comments) => {
+          console.log(comments);
           res.render("articles/detail", {
             title: "Article",
             article,
@@ -93,13 +94,32 @@ Comments.id = Likes.commentId ORDER BY Comments.created_at DESC`,
 
 function like(req, res) {
   const data = req.body;
-  db.run(
-    "INSERT INTO Likes (articleId, userId) VALUES (?, ?)",
-    [data.articleId, data.userId],
-    (err) => {
-      res.status(StatusCodes.NO_CONTENT).send();
+  if (!req.session.user) {
+    return res.status(StatusCodes.UNAUTHORIZED).send()
+  }
+  db.get("SELECT * FROM Likes WHERE articleId = ? AND userId = ?", [
+    data.articleId, req.session.user.id
+  ], (err, like) =>{
+    if (like) {
+      db.run("DELETE FROM Likes WHERE id = ?", [
+        like.id
+      ], (err) => {
+        if (err) {
+          return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+        }
+
+        res.status(StatusCodes.NO_CONTENT).send();
+      })
+    } else {
+      db.run(
+        "INSERT INTO Likes (articleId, userId) VALUES (?, ?)",
+        [data.articleId, req.session.user?.id ?? null],
+        (err) => {
+          res.status(StatusCodes.NO_CONTENT).send();
+        }
+      );
     }
-  );
+  })
 }
 
 module.exports = {

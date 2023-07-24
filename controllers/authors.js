@@ -1,4 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
+const timeSince = require("../utils/timeSince");
+const convertToISO = require("../utils/convertToIso");
 
 function homePage(req, res) {
   db.get(
@@ -14,8 +16,6 @@ function homePage(req, res) {
         `,
         [req.params.id],
         (err, articles) => {
-          console.log(err);
-          console.log(articles);
           const { publishedArticles, unpublishedArticles } = articles.reduce(
             (accumulator, article) => {
               if (article.publication_date !== null) {
@@ -36,6 +36,8 @@ function homePage(req, res) {
             user,
             articles: unpublishedArticles,
             publishedArticles,
+            timeSince,
+            convertToISO
           });
         }
       );

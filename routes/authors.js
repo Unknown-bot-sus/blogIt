@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const { homePage, settingsPage, putAuthor } = require("../controllers/authors");
-router.get("/:id/settings", settingsPage);
+const { isAuthenticated, isAuthorizedAuthor } = require("../middleware/auth");
 
-router.route("/:id").get(homePage).put(putAuthor);
+router.get("/:id/settings", isAuthenticated, isAuthorizedAuthor, settingsPage);
+
+router.route("/:id").get(isAuthenticated, isAuthorizedAuthor, homePage).put(isAuthenticated, isAuthorizedAuthor, putAuthor);
 
 module.exports = router;

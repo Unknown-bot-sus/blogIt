@@ -1,0 +1,13 @@
+<div class="w-80 rounded-lg py-3 px-5 mx-3 bg-gray-100">
+
+    <span class="block text-lg font-bold"><%= title %> </span>
+      <span class="text-sm block text-gray-600"
+      >Published: <%= new Date(publication_date).toDateString() %></span
+    >
+    <span>Likes: <%= likes %></span>
+  
+    <div>
+        <a href="/articles/<%=id%>" class="text-blue-500">Read More</a>
+    </div>
+  </div>
+  

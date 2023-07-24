@@ -1,17 +1,17 @@
-<main>
-  <h1>Reader home page</h1>
+<main class="p-5">
+  <h1 class="text-2xl font-bold mb-4">Reader home page</h1>
   <% for (let author of authors) { %>
-  <div>
-    <span> <%= author.name %> </span>
-    <span> Title: <%= author.title %> </span>
-    <span> Subtitle: <%= author.subtitle %> </span>
+  <div class="mb-4">
+    <span class="block font-semibold"> <%= author.name %> </span>
+    <span class="block"> Title: <%= author.title %> </span>
+    <span class="block"> Subtitle: <%= author.subtitle %> </span>
   </div>
   <div>
-    <span>Published Articles</span>
-    <div>
-      <% for (let article of articles.filter((article) => article.authorId ===
-      author.id)) { %> <%- include("../partials/article.ejs", article) %> <% }
-      %>
+    <span class="block font-semibold mb-2">Published Articles</span>
+    <div class="flex flex-wrap -mx-4">
+      <% for (let article of articles.filter((article) => article.authorId === author.id)) { %> 
+      <%- include("../partials/readerArticle.ejs", article) %> 
+      <% } %>
     </div>
   </div>
   <% } %>

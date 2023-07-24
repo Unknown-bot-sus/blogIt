@@ -1,60 +1,81 @@
-<main>
-  <div>
-    <span>Title</span>
+<main class="p-5">
+  <div class="mb-4">
+    <span class="font-semibold">Title</span>
     <span><%= article.title %></span>
   </div>
-  <div>
-    <span>Subtitle</span>
+  <div class="mb-4">
+    <span class="font-semibold">Subtitle</span>
     <span><%= article.subtitle %></span>
   </div>
-  <div>
-    <span>Publication date</span>
+  <div class="mb-4">
+    <span class="font-semibold">Publication date</span>
     <span><%= article.publication_date %></span>
   </div>
-  <div>
-    <span>Content</span>
+  <div class="mb-4">
+    <span class="font-semibold">Content</span>
     <span><%= article.content %></span>
   </div>
-  <div>
-    <span>Number of Likes </span>
+  <div class="mb-4">
+    <span class="font-semibold">Number of Likes</span>
     <span><%= article.likes %></span>
   </div>
-  <button id="likeBtn" type="button">Like</button>
-  <a href="/">Reader Home page</a>
-  <form id="commentForm"">
-    <label for="comment">Comment</label>
-    <textarea id="comment" name="comment" name="comment" cols="30" rows="10"></textarea>
-    <button type="submit">Submit</button>
+  <button
+    id="likeBtn"
+    type="button"
+    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg mb-4"
+  >
+    Like
+  </button>
+  <a href="/" class="text-blue-500 hover:underline block mb-4">Reader Home page</a>
+  <form id="commentForm" class="mb-4">
+    <label for="comment" class="font-semibold block">Comment</label>
+    <textarea
+      id="comment"
+      name="comment"
+      cols="30"
+      rows="10"
+      class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:border-blue-500"
+    ></textarea>
+    <button
+      type="submit"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg mt-2"
+    >
+      Submit
+    </button>
   </form>
-    <div>
-      <% for (let comment of comments) { %> <%-
-      include("../partials/comment.ejs", comment) %> <% } %>
-    </div>
-    <script>
-      const commentForm = document.getElementById("commentForm");
-      const likeBtn = document.getElementById("likeBtn");
-      const paths = location.pathname.split("/");
-      const articleId = paths[paths.length - 1];
-      commentForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
+  <div>
+    <% for (let comment of comments) { %> <%-
+    include("../partials/comment.ejs", comment) %> <% } %>
+  </div>
+  <script>
+    const commentForm = document.getElementById("commentForm");
+    const likeBtn = document.getElementById("likeBtn");
+    const paths = location.pathname.split("/");
+    const articleId = paths[paths.length - 1];
 
-        await axios.post("/comments", {
-          ...data,
-          articleId
-        });
+    commentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
 
-        location.reload();
+      await axios.post("/comments", {
+        ...data,
+        articleId,
       });
 
-      likeBtn.addEventListener("click", async(e) => {
-        console.log("hello");
+      location.reload();
+    });
+
+    likeBtn.addEventListener("click", async (e) => {
+      try {
         await axios.post(`/articles/${articleId}/likes`, {
-          articleId,
-          userId: 1
-        })
-        location.reload();
-      })
-    </script>
+        articleId,
+        userId: 1,
+      });
+      location.reload();
+      } catch(e) {
+        location.href = "/auth/login"
+      }
+    });
+  </script>
 </main>
