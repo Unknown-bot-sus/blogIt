@@ -7,13 +7,15 @@ function homePage(req, res) {
     (err, user) => {
       db.all(
         `
-        SELECT Articles.*, Likes.likes FROM
-        (SELECT * FROM Articles WHERE authorId = ?) AS Articles INNER JOIN 
+        SELECT Articles.*, IFNULL(Likes.likes, 0) AS likes FROM
+        (SELECT * FROM Articles WHERE authorId = ?) AS Articles LEFT JOIN 
         (SELECT COUNT(id) as likes, articleId FROM Likes GROUP BY articleId) AS Likes ON
         Articles.id = Likes.articleId
         `,
         [req.params.id],
         (err, articles) => {
+          console.log(err);
+          console.log(articles);
           const { publishedArticles, unpublishedArticles } = articles.reduce(
             (accumulator, article) => {
               if (article.publication_date !== null) {
