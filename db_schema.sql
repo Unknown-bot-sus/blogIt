@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS Articles (
     FOREIGN KEY(authorId) REFERENCES Authors(id)
 );
 
-CREATE TRIGGER UpdateedAtArticles
+CREATE TRIGGER IF NOT EXISTS UpdateedAtArticles
 AFTER UPDATE On Articles
 BEGIN
    UPDATE Articles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
@@ -61,8 +61,9 @@ CREATE TABLE IF NOT EXISTS Likes (
 CREATE TABLE IF NOT EXISTS Comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INT NOT NULL,
-    articleId INT NOT NULL,
+    articleId INT,
     comment TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(userId) REFERENCES Users(id),
     FOREIGN KEY(articleId) REFERENCES Articles(id)
 );
@@ -116,6 +117,18 @@ INSERT INTO Articles (
     CURRENT_TIMESTAMP,
     1
 );
+
+INSERT INTO Comments (
+    "userId",
+    "articleId",
+    "comment"
+) VALUES (
+    2,
+    1,
+    "Text Comment"
+), (1, 2, "Text Comment");
+
+INSERT INTO CommentLikes ("userId", "commentId") VALUES (1, 1);
 
 INSERT INTO Likes ("articleId", "userId") VALUES (1, 1), (1, 2), (2, 1), (2, 2);
 
