@@ -9,6 +9,7 @@ const userRoutes = require("./routes/user");
 const authorRoutes = require("./routes/authors");
 const articleRoutes = require("./routes/articles");
 const readerRoutes = require("./routes/reader");
+const commentRoutes = require("./routes/comments");
 
 const { errorHandler } = require("./middleware/error-handler");
 
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use("/user", userRoutes); //this adds all the userRoutes to the app under the path /user
 app.use("/authors", authorRoutes);
 app.use("/articles", articleRoutes);
+app.use("/comments", commentRoutes);
 app.use("/", readerRoutes);
 
 // added errorHandler middleware
